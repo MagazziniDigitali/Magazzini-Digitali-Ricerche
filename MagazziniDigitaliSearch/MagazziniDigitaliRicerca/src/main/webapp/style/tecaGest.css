@@ -1,0 +1,7 @@
+div.pCenter{
+    margin-top: 10px;
+}
+
+div.pCenter #gwt-TabLayoutPanel{
+    height:auto;
+}

@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <!-- POM file generated with GWT webAppCreator -->
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+        <artifactId>MagazziniDigitaliSearch</artifactId>
+    <groupId>it.bncf.magazziniDigitali.search</groupId>
+        <version>1.0.0</version>
+    </parent>
+  <artifactId>MagazziniDigitaliRicerca</artifactId>
+  <packaging>war</packaging>
+  <version>1.0.1</version>
+  <name>MDRicerca</name>
+  
+  <properties>
+    <!-- Convenience property to set the GWT version -->
+    <gwtVersion>2.6.0</gwtVersion>
+
+    <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+    <!-- GWT needs at least java 1.6 -->
+    <maven.compiler.source>1.7</maven.compiler.source>
+    <maven.compiler.target>1.7</maven.compiler.target>
+  </properties>
+
+  <dependencies>
+    <dependency>
+    	<groupId>org.eclipse.jetty</groupId>
+    	<artifactId>jetty-servlet</artifactId>
+    	<version>9.2.1.v20140609</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-servlet</artifactId>
+      <version>${gwtVersion}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-user</artifactId>
+      <version>${gwtVersion}</version>
+    </dependency>
+    <!-- 
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-dev</artifactId>
+      <version>${gwtVersion}</version>
+      <scope>test</scope>
+    </dependency>
+     -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.8.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.validation</groupId>
+      <artifactId>validation-api</artifactId>
+      <version>1.0.0.GA</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.validation</groupId>
+      <artifactId>validation-api</artifactId>
+      <version>1.0.0.GA</version>
+      <classifier>sources</classifier>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+    	<groupId>axis</groupId>
+    	<artifactId>axis</artifactId>
+    	<version>1.4</version>
+    </dependency>
+    <dependency>
+    	<groupId>com.allen-sauer.gwt.dnd</groupId>
+    	<artifactId>gwt-dnd</artifactId>
+    	<version>3.3.0</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.springframework</groupId>
+    	<artifactId>spring-web</artifactId>
+    	<version>2.5.6</version>
+    </dependency>
+    <dependency>
+    	<groupId>commons-collections</groupId>
+    	<artifactId>commons-collections</artifactId>
+    	<version>3.1</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.springframework</groupId>
+    	<artifactId>spring-aop</artifactId>
+    	<version>2.5.6</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.springframework</groupId>
+    	<artifactId>spring-orm</artifactId>
+    	<version>2.5.6</version>
+    </dependency>
+<!--  
+    <dependency>
+    	<groupId>org.springframework</groupId>
+    	<artifactId>spring-jdbc</artifactId>
+    	<version>2.5.6</version>
+    </dependency>
+    <dependency>
+    	<groupId>mysql</groupId>
+    	<artifactId>mysql-connector-java</artifactId>
+    	<version>5.1.25</version>
+    </dependency>
+-->
+    <dependency>
+    	<groupId>aspectj</groupId>
+    	<artifactId>aspectjrt</artifactId>
+    	<version>1.5.4</version>
+    </dependency>
+
+    <dependency>
+    	<groupId>org.aspectj</groupId>
+    	<artifactId>aspectjweaver</artifactId>
+    	<version>1.8.1</version>
+    </dependency>
+    <dependency>
+    	<groupId>aspectj</groupId>
+    	<artifactId>aspectj-tools</artifactId>
+    	<version>1.0.6</version>
+    </dependency>
+    <dependency>
+    	<groupId>com.smartgwt</groupId>
+    	<artifactId>smartgwt</artifactId>
+    	<version>2.5-patch</version>
+    </dependency>
+    <dependency>
+    	<groupId>log4j</groupId>
+    	<artifactId>log4j</artifactId>
+    	<version>1.2.17</version>
+    </dependency>
+    <dependency>
+    	<groupId>it.bncf.magazziniDigitali.search.business</groupId>
+    	<artifactId>MagazziniDigitaliRicercaBusiness</artifactId>
+    	<version>1.0.0</version>
+    </dependency>
+    <dependency>
+    	<groupId>it.bncf.magazziniDigitali.utils</groupId>
+    	<artifactId>MagazziniDigitaliUtils</artifactId>
+    	<version>1.0.3</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.apache.solr</groupId>
+    	<artifactId>solr-core</artifactId>
+    	<version>5.0.0</version>
+    </dependency>
+    <dependency>
+    	<groupId>mx.randalf.converter.xsl</groupId>
+    	<artifactId>RandalfConverterXsl</artifactId>
+    	<version>1.0.0</version>
+    </dependency>
+  </dependencies>
+  
+  <build>
+    <!-- Generate compiled stuff in the folder used for developing mode --> 
+    <outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
+    <finalName>${artifactId}</finalName>
+    <plugins>
+      
+      <!-- GWT Maven Plugin-->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>gwt-maven-plugin</artifactId>
+	<version>2.2.0</version>
+	<dependencies>
+          <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>${gwtVersion}</version>
+          </dependency>
+          <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-dev</artifactId>
+            <version>${gwtVersion}</version>
+          </dependency>
+          <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-servlet</artifactId>
+            <version>${gwtVersion}</version>
+          </dependency>
+	</dependencies>
+        <!-- JS is only needed in the package phase, this speeds up testing --> 
+        <executions>
+          <execution>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>compile</goal>
+              <goal>generateAsync</goal>
+            </goals>
+          </execution>
+        </executions>
+        <!-- Plugin configuration. There are many available options, 
+             see gwt-maven-plugin documentation at codehaus.org --> 
+        <configuration>
+          <!-- URL that should be automatically opened in the GWT shell (gwt:run). -->
+          <runTarget>index.html</runTarget>
+          <!-- Location of the develop-mode web application structure (gwt:run). -->
+          <hostedWebapp>${webappDirectory}</hostedWebapp>
+          <!-- Ask GWT to create the Story of Your Compile (SOYC) (gwt:compile) -->
+          <compileReport>true</compileReport>
+        </configuration>
+      </plugin>
+
+      <!-- Add source folders to test classpath in order to run gwt-tests as normal junit-tests -->
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+	<version>2.5</version>
+        <configuration>
+          <additionalClasspathElements>
+            <additionalClasspathElement>${project.build.sourceDirectory}</additionalClasspathElement>
+            <additionalClasspathElement>${project.build.testSourceDirectory}</additionalClasspathElement>
+          </additionalClasspathElements>
+          <useManifestOnlyJar>false</useManifestOnlyJar>
+          <forkMode>always</forkMode>
+
+          <!-- Folder for generated testing stuff --> 
+          <systemProperties>
+            <property>
+              <name>gwt.args</name>
+              <value>-out ${webappDirectory}</value>
+            </property>
+          </systemProperties>
+        </configuration>
+      </plugin>
+      
+      <!-- Copy static web files before executing gwt:run -->
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.4.2</version>
+        <executions>
+          <execution>
+            <phase>compile</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${webappDirectory}</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/webapp</directory>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Delete gwt generated stuff -->
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+	<version>2.3</version>
+        <configuration>
+          <filesets>
+            <fileset><directory>src/main/webapp/index</directory></fileset>
+            <fileset><directory>src/main/webapp/WEB-INF/classes</directory></fileset>
+            <fileset><directory>tomcat</directory></fileset>
+            <fileset><directory>www-test</directory></fileset>
+            <fileset><directory>.gwt-tmp</directory></fileset>
+          </filesets>
+        </configuration>
+      </plugin>
+
+      <plugin>
+	<artifactId>maven-eclipse-plugin</artifactId>
+	<version>2.7</version>  <!--  Note 2.8 does not work with AspectJ aspect path -->
+	<configuration>
+          <downloadSources>true</downloadSources>
+          <downloadJavadocs>false</downloadJavadocs>
+          <wtpversion>2.0</wtpversion>
+          <additionalBuildcommands>
+            <buildCommand>
+              <name>com.google.gwt.eclipse.core.gwtProjectValidator</name>
+            </buildCommand>
+          </additionalBuildcommands>
+          <additionalProjectnatures>
+            <projectnature>com.google.gwt.eclipse.core.gwtNature</projectnature>
+          </additionalProjectnatures>
+	</configuration>
+      </plugin>
+
+    </plugins>
+  </build>
+
+	<repositories>
+		<repository>
+			<id>bncf</id>
+			<url>http://maven.bncf.firenze.sbn.it/artifactory/libs-release</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<!-- 
+		<repository>
+			<id>bncf-snapshots</id>
+			<url>http://maven.bncf.firenze.sbn.it/artifactory/libs-snapshot</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+		</repository>
+		 -->
+	</repositories>
+	<!-- 
+	<pluginRepositories>
+		<pluginRepository>
+			<id>bncf</id>
+			<url>http://maven.bncf.firenze.sbn.it/artifactory/plugins-release</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+		<pluginRepository>
+			<id>bncf-snapshots</id>
+			<url>http://maven.bncf.firenze.sbn.it/artifactory/plugins-snapshot</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+		</pluginRepository>
+	</pluginRepositories>
+	 -->
+	<distributionManagement>
+		<repository>
+			<id>mvn-bncf</id>
+			<name>mvn-bncf-releases</name>
+			<url>http://maven.bncf.firenze.sbn.it/artifactory/libs-release-local</url>
+		</repository>
+	</distributionManagement>
+</project>

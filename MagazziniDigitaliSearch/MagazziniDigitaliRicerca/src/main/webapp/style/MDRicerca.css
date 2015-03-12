@@ -1,0 +1,81 @@
+@CHARSET "UTF-8";
+div.header{
+    height: 130px;
+}
+
+div.center{
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	margin: 0 auto -30px;
+	overflow-y: scroll;
+}
+
+div.footer{
+  bottom:0;
+  font-weight:bolder;
+  height:30px;
+  position:absolute;
+  text-align:center;
+  width:100%;
+}
+
+.gwt-MenuPrinc-horizontal {
+    background: url("../images/hborder.png") repeat-x scroll 0 -2003px #E3E8F3;
+    border: 1px solid #E0E0E0;
+}
+.gwt-MenuPrinc {
+    cursor: default;
+	margin: auto;
+	width: intrinsic;
+	width: -moz-fit-content;
+	width: -webkit-max-content;
+}
+
+.searchPanel{
+	margin: auto;
+	width: intrinsic;
+	width: -moz-fit-content;
+	width: -webkit-max-content;
+}
+
+.ui-mobile fieldset, .ui-page {
+	margin: auto;
+}
+
+div.facetPanel {
+	margin-bottom: 74px;
+    position: relative;
+    width: 192px;
+    float: left;
+}
+
+.fcTree {
+    color: #000000;
+}
+
+.resultPanel {
+    width: 100 px;
+    color: #000000;
+    float: left;
+}
+
+table.mdResultRice {
+    border: solid 1px;
+    margin: auto;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-bottom: 74px;
+    padding: 0px;
+    border-collapse: collapse;
+}
+
+table.mdResultRice td {
+    color: #000000;
+    border: solid 1px;
+    padding: 3px;
+}
+
+table.pNavigator td {
+    color: #000000;
+}

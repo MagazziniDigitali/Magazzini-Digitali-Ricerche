@@ -1,0 +1,347 @@
+.rtl {
+    direction: rtl;
+}
+.ltr {
+    direction: ltr;
+}
+CODE {
+    font-style: normal;
+}
+.demo-example-panel {
+    margin: 1em;
+}
+div.dragdrop-dropTarget {
+    background-color: #CCCCCC;
+    border: 1px solid #000000;
+}
+div.dragdrop-dropTarget-engage {
+    background: none repeat scroll 0 0 #BCDEFF;
+}
+div.demo-main-boundary-panel {
+    background: none repeat scroll 0 0 #F8F8F8;
+    border: 1px solid #0000FF;
+}
+.demo-red-box-draggable-widget {
+    background-color: #EE0000;
+    border: 2px solid #AA0000;
+    color: #FFCCCC;
+    font-size: 12px;
+    text-align: center;
+}
+.demo-BinExample DIV.dragdrop-dropTarget {
+    background-color: #CCCCCC;
+}
+.demo-BinExample DIV.demo-bin {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #87B3FF;
+    border-color: #000000;
+    border-image: none;
+    border-right: 1px solid #000000;
+    border-style: solid;
+    border-width: 4px 1px 1px;
+    text-align: center;
+}
+.demo-BinExample DIV.demo-bin-engage {
+    background-color: #A7E3FF;
+}
+.demo-BinExample DIV.demo-trashbin {
+    background-color: #FF7743;
+}
+.demo-BinExample DIV.demo-trashbin-engage {
+    background-color: #FFA773;
+}
+.demo-BinExample-draggable-engage {
+    opacity: 0.1;
+}
+.demo-AbsolutePositionExample {
+}
+.demo-GridConstrainedExample {
+}
+.demo-FlowPanelExample-draggable {
+    background-color: #B3FF87;
+    border: 1px solid #0000FF;
+    margin: 0.1em;
+    padding: 0.1em;
+}
+.demo-FlowPanelExample-draggable, .demo-FlowPanelExample-draggable DIV {
+    display: inline;
+}
+.demo-FlowPanelExample-label {
+    font-size: 1.2em;
+    line-height: 1.3em;
+}
+.dragdrop-flow-panel-positioner {
+    color: #0000FF;
+}
+.demo-InsertPanelExample .demo-InsertPanelExample-widget, .demo-InsertPanelExample .demo-InsertPanelExample-heading, .demo-InsertPanelExample .demo-InsertPanelExample-spacer {
+    margin: 0.1em;
+    padding: 0.1em;
+    width: 120px;
+}
+.demo-InsertPanelExample .demo-InsertPanelExample-widget, .demo-InsertPanelExample .demo-InsertPanelExample-heading {
+    border: 1px solid #0000FF;
+}
+.demo-InsertPanelExample .demo-InsertPanelExample-spacer {
+    height: 50px;
+}
+.demo-InsertPanelExample .demo-InsertPanelExample-widget {
+    background-color: #B3FF87;
+}
+.demo-InsertPanelExample .demo-InsertPanelExample-heading {
+    background-color: #87B3FF;
+}
+.demo-InsertPanelExample .demo-InsertPanelExample-column-composite {
+    padding: 1px;
+}
+.demo-FlexTableRowExample .dragdrop-boundary {
+    background-color: #F8F8F8;
+}
+.demo-FlexTableRowExample .demo-FlexTableRowExample-table-proxy {
+    border: 1px solid #0000FF;
+    opacity: 0.5;
+}
+.demo-FlexTableRowExample .demo-flextable .dragdrop-handle {
+    background: url("../images/row-dragger-8.gif") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+    padding-left: 10px;
+}
+.demo-FlexTableRowExample .demo-flextable .checkBox-normal{
+    width: 1px;
+}
+.demo-FlexTableRowExample .demo-flextable .testo-normal{
+    font-weight: normal;
+    font-size:14px;
+    font-family:Times New Roman;
+}
+.demo-FlexTableRowExample .demo-flextable .testo-bold{
+    font-weight: bold;
+    font-size:14px;
+    font-family:Times New Roman;
+}
+.demo-FlexTableRowExample table {
+    background-color: #CCCCCC;
+}
+.demo-FlexTableRowExample .demo-table-positioner {
+    border-top: 1px solid #008000;
+    margin-top: 1px;
+    z-index: 1;
+}
+.demo-FlexTableRowExample .dragdrop-selected, .demo-FlexTableRowExample .dragdrop-dragging, .demo-FlexTableRowExample .dragdrop-proxy {
+    opacity: 1;
+}
+.demo-WindowExample .demo-WindowPanel {
+    background-color: #FFFFFF;
+}
+.demo-WindowExample .demo-WindowPanel .demo-WindowPanel-header {
+    background-color: #666666;
+    color: #FFFFFF;
+    overflow: hidden;
+}
+.demo-WindowExample .demo-WindowPanel .demo-WindowPanel-iframe {
+    border: medium none;
+    display: block;
+}
+.demo-WindowExample .dragdrop-boundary {
+    background-color: #F8F8F8;
+    border: 1px solid #000000;
+}
+.demo-WindowExample .demo-resize-html {
+    background-color: #DDEEDD;
+    border: 0 none;
+    display: block;
+    height: 100%;
+    width: 100%;
+}
+.demo-WindowExample .demo-resize-edge {
+    background-image: url("../images/dragger-4x4.gif");
+    background-repeat: repeat;
+    font-size: 1px;
+    line-height: 1px;
+}
+.demo-WindowExample .demo-resize-nw .dragdrop-handle {
+    cursor: nw-resize;
+}
+.demo-WindowExample .demo-resize-n .dragdrop-handle {
+    cursor: n-resize;
+}
+.demo-WindowExample .demo-resize-ne .dragdrop-handle {
+    cursor: ne-resize;
+}
+.demo-WindowExample .demo-resize-w .dragdrop-handle {
+    cursor: w-resize;
+}
+.demo-WindowExample .demo-resize-e .dragdrop-handle {
+    cursor: e-resize;
+}
+.demo-WindowExample .demo-resize-sw .dragdrop-handle {
+    cursor: sw-resize;
+}
+.demo-WindowExample .demo-resize-s .dragdrop-handle {
+    cursor: s-resize;
+}
+.demo-WindowExample .demo-resize-se .dragdrop-handle {
+    cursor: se-resize;
+}
+.demo-DragHandleExample .demo-DragHandleExample-panel {
+    background-color: #FFFFFF;
+    border: 1px solid #008000;
+    width: 400px;
+}
+.demo-DragHandleExample .demo-DragHandleExample-textarea {
+    height: 4em;
+    width: 95%;
+}
+.demo-DragHandleExample .demo-DragHandleExample-header {
+    background-color: #DDEEDD;
+}
+.demo-DualListExample .dragdrop-selected, .demo-DualListExample .dragdrop-dragging, .demo-DualListExample .dragdrop-proxy {
+    opacity: 1;
+}
+.demo-DualListExample .dragdrop-boundary {
+    background-color: rgba(0, 0, 0, 0);
+    border: medium none;
+}
+.demo-DualListExample .demo-MouseListBox {
+    background-color: #FFFFFF;
+    border: 1px solid #808080;
+}
+.demo-DualListExample .dragdrop-movable-panel {
+    border: medium none;
+}
+.demo-DualListExample-center {
+    margin: 0.4em;
+}
+.demo-DualListExample-center TD {
+    padding: 0.2em 0.4em;
+}
+.demo-DualListExample-center BUTTON {
+    width: 4em;
+}
+.demo-DualListExample-item-has-content {
+    cursor: pointer;
+}
+.demo-DualListExample .dragdrop-selected, .demo-DualListExample .dragdrop-movable-panel .demo-DualListExample-item-has-content {
+    background-color: #0000FF;
+}
+.demo-PuzzleExample .dragdrop-boundary {
+    background-color: #F8F8F8;
+    border: 1px solid #000000;
+}
+.demo-PuzzleExample-table {
+    border: 1px solid #FF0000;
+}
+.demo-PuzzleExample-cell {
+    border: 1px solid #000000;
+}
+.demo-MatryoshkaExample .dragdrop-boundary {
+    background-color: #F8F8F8;
+    border: 1px solid #000000;
+}
+.demo-MatryoshkaExample .demo-rgb-focus-panel .demo-rgb-focus-panel {
+    margin: 10px;
+}
+.demo-MatryoshkaExample .demo-rgb-focus-panel {
+    border: 1px solid #FFFFFF;
+}
+.demo-MatryoshkaExample .demo-MatryoshkaExample-dropTarget-engage {
+    border: 1px solid #000000;
+}
+.demo-ResetCacheExample .demo-ResetCacheExample-TabPanel .gwt-TabPanelBottom {
+    height: 100%;
+}
+.demo-ResetCacheExample DIV.dragdrop-dropTarget {
+    border: medium none;
+}
+.demo-ResetCacheExample .gwt-TabBar DIV.dragdrop-dropTarget {
+    padding: 2px 6px;
+}
+.demo-ResetCacheExample-draggable {
+    border: 1px solid #000000;
+    text-align: center;
+    width: 5em;
+}
+.demo-PaletteExample .dragdrop-dragging {
+    opacity: 1;
+}
+.demo-PaletteWidget {
+    display: inline;
+    margin: auto;
+}
+.demo-PaletteWidget-widget {
+    display: inline;
+    margin: auto;
+    padding: 2px;
+}
+.demo-PaletteWidget-shim {
+    background-color: #0000FF;
+    opacity: 0.1;
+}
+.demo-PalettePanel {
+    background-color: #FFFFFF;
+    border: 1px solid #0000FF;
+    padding: 4px;
+}
+.demo-PalettePanel-header {
+    font-weight: bold;
+}
+.demo-main-boundary-panel .demo-example-description {
+    border-bottom: 1px solid #87B3FF;
+    padding: 0.5em 0.3em;
+}
+.demo-behavior-panel {
+    background-color: #E8EEF7;
+    border: 1px solid #87B3FF;
+    margin-bottom: 0.2em;
+    margin-top: 1em;
+    padding: 0.2em 0.1em;
+    width: 100%;
+}
+.demo-behavior-panel .demo-behavior-heading {
+    color: #0000FF;
+    cursor: help;
+    font-weight: bold;
+}
+.demo-behavior-panel .gwt-RadioButton {
+    cursor: pointer;
+}
+.demo-event-text-area {
+    border: 1px solid #008000;
+    overflow: auto;
+}
+.gwt-TabBar .gwt-TabBarItem {
+    cursor: pointer;
+}
+.demo-MultiRowTabPanel-bottom {
+    background-color: #E8EEF7;
+    border-bottom: 1px solid #87B3FF;
+    border-left: 1px solid #87B3FF;
+    border-right: 1px solid #87B3FF;
+}
+.demo-ExampleTabPanel-tab-bar .gwt-TabBar {
+    background-color: #C3D9FF;
+}
+.demo-ExampleTabPanel-tab-bar .gwt-TabBar .gwt-TabBarFirst {
+    height: 100%;
+    padding-left: 3px;
+}
+.demo-ExampleTabPanel-tab-bar .gwt-TabBar .gwt-TabBarRest {
+    padding-right: 3px;
+}
+.demo-ExampleTabPanel-tab-bar .gwt-TabBar .gwt-TabBarItem {
+    border-top: 1px solid #C3D9FF;
+    padding: 2px 6px;
+}
+.demo-ExampleTabPanel-tab-bar .demo-MultiRowTabPanel-row .gwt-TabBarItem, .demo-ExampleTabPanel-tab-bar .demo-MultiRowTabPanel-row .gwt-TabBarFirst, .demo-ExampleTabPanel-tab-bar .demo-MultiRowTabPanel-row .gwt-TabBarRest {
+    border-bottom: 1px solid #87B3FF;
+}
+.demo-ExampleTabPanel-tab-bar .gwt-TabBar .gwt-TabBarItem-selected {
+    background-color: #E8EEF7;
+    border-color: #87B3FF #87B3FF #E8EEF7;
+    border-style: solid;
+    border-width: 1px;
+    cursor: default;
+    font-weight: bold;
+    padding: 2px;
+}

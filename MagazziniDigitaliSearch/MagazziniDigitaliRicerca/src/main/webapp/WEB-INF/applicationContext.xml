@@ -1,0 +1,98 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <bean id="mdConfiguration" class="it.bncf.magazziniDigitali.configuration.MDConfiguration">
+        <property name="fileConfiguration" value="MDConfig|file:////Users/massi/Desktop/Lavoro/Sorgenti/Bncf/MagazziniDigitaliRicerche/MagazziniDigitaliSearch/configurazione"/>
+    </bean>
+    
+    <!--
+    <bean id="propertyConfigurer"
+        class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    </bean>
+    <bean id="propertyConfigurer"
+        class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="jdbc.properties"/>
+    </bean>
+    <bean id="hibernateTemplate" class="org.springframework.orm.hibernate3.HibernateTemplate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory"/>
+        </property>
+    </bean>
+-->
+    <context:annotation-config/>
+    <context:component-scan base-package="it.bncf.magazziniDigitali.search.server"/>
+    <aop:aspectj-autoproxy/>
+
+    <!-- Session Factory 
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+        <property name="dataSource">
+            <ref local="dataSource"/>
+        </property>
+        <property name="mappingResources">
+            <list>
+                <value>mx/teca2013/database/entity/AutorizzazioniIstituto.hbm.xml</value>
+                <value>mx/teca2013/database/entity/Client.hbm.xml</value>
+                <value>mx/teca2013/database/entity/ClientIstituto.hbm.xml</value>
+                <value>mx/teca2013/database/entity/Immagini.hbm.xml</value>
+                <value>mx/teca2013/database/entity/Istituti.hbm.xml</value>
+                <value>mx/teca2013/database/entity/Opere.hbm.xml</value>
+                <value>mx/teca2013/database/entity/Opere_Immagini.hbm.xml</value>
+                <value>mx/teca2013/database/entity/OpereHistory.hbm.xml</value>
+                <value>mx/teca2013/database/entity/Progetti.hbm.xml</value>
+                <value>mx/teca2013/database/entity/UtenteIstituto.hbm.xml</value>
+                <value>mx/teca2013/database/entity/Utenti.hbm.xml</value>
+            </list>
+        </property>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect"
+                    >
+                    org.hibernate.dialect.MySQLDialect
+                </prop>
+                <prop key="hibernate.show_sql">
+                    false
+                </prop>
+                <prop key="hbm2ddl.auto">
+                    update
+                </prop>
+            </props>
+        </property>
+    </bean>
+    -->
+
+    <!-- DataSource 
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName">
+            <value>${database.driver}</value>
+        </property>
+        <property name="url">
+            <value>${database.url}</value>
+        </property>
+        <property name="username">
+            <value>${database.user}</value>
+        </property>
+        <property name="password">
+            <value>${database.password}</value>
+        </property>
+    </bean>
+    -->
+
+    <!-- switches on the transactional behavior
+    <tx:annotation-driven/>
+    -->
+
+    <!-- a PlatformTransactionManager is still required 
+    <bean id="transactionManager"
+        class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    -->
+    
+</beans>
