@@ -33,7 +33,7 @@ public class SearchServiceBusiness {
 	}
 
 	@SuppressWarnings("unchecked")
-	public QueryResponse find(String query, TreeMap<String, String> queryFacet, int start, int rows) throws 
+	public QueryResponse find(String query, TreeMap<String, String[]> queryFacet, int start, int rows) throws 
 			NumberFormatException,ConfigurationException, SolrException, 
 			SolrServerException{
 		FindDocument find = null;
