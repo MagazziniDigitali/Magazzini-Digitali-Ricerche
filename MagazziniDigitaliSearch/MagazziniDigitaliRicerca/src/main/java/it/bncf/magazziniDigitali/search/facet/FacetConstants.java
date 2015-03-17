@@ -36,4 +36,57 @@ public interface FacetConstants extends Costanti {
 	String tipoOggetto_fc();
 	String tipoOggetto_title();
 
+	@DefaultStringValue("tipoDocumento")
+	String tipoDocumento();
+	@DefaultStringValue("tipoDocumento_fc")
+	String tipoDocumento_fc();
+	String tipoDocumento_title();
+
+	@DefaultStringValue("autore")
+	String autore();
+	@DefaultStringValue("autore_fc")
+	String autore_fc();
+	String autore_title();
+
+	@DefaultStringValue("titolo")
+	String titolo();
+	@DefaultStringValue("titolo_fc")
+	String titolo_fc();
+	String titolo_title();
+
+	@DefaultStringValue("data")
+	String data();
+	@DefaultStringValue("data_fc")
+	String data_fc();
+	String data_title();
+
+	@DefaultStringValue("tipoContenitore")
+	String tipoContenitore();
+	@DefaultStringValue("tipoContenitore_fc")
+	String tipoContenitore_fc();
+	String tipoContenitore_title();
+
+	@DefaultStringValue("fileType")
+	String fileType();
+	@DefaultStringValue("fileType_fc")
+	String fileType_fc();
+	String fileType_title();
+
+	@DefaultStringValue("eventType_fc")
+	String eventType();
+	@DefaultStringValue("eventType_fc")
+	String eventType_fc();
+	String eventType_title();
+
+	@DefaultStringValue("agentSoftware")
+	String agentSoftware();
+	@DefaultStringValue("agentSoftware_fc")
+	String agentSoftware_fc();
+	String agentSoftware_title();
+
+	@DefaultStringValue("agentDepositante")
+	String agentDepositante();
+	@DefaultStringValue("agentDepositante_fc")
+	String agentDepositante_fc();
+	String agentDepositante_title();
 }

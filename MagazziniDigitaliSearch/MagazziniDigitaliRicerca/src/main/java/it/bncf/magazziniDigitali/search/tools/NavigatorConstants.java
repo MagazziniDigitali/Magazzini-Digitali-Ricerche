@@ -9,4 +9,10 @@ public interface NavigatorConstants extends Constants {
 	String bAvanti();
 	String bFine();
 	String recPag();
+	
+	@DefaultIntValue(value=100000)
+	int maxRecSearch();
+
+	@DefaultIntValue(value=200)
+	int maxRecPage();
 }

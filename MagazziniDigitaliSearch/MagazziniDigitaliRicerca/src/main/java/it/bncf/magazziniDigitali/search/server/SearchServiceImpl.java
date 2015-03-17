@@ -15,6 +15,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.List;
 import java.util.TreeMap;
+import java.util.Vector;
 
 import mx.randalf.configuration.Configuration;
 import mx.randalf.configuration.exception.ConfigurationException;
@@ -23,6 +24,7 @@ import mx.randalf.converter.xsl.exception.ConvertXslException;
 import mx.randalf.solr.exception.SolrException;
 
 import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.PivotField;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.params.SolrParams;
@@ -85,7 +87,7 @@ public class SearchServiceImpl extends RemoteServiceServlet implements
 	 * @see it.bncf.magazziniDigitali.search.search.SearchService#find(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public Integer find(String keywords, TreeMap<String, String> queryFacet)
+	public Integer find(String keywords, TreeMap<String, String[]> queryFacet, Integer start, Integer rows)
 			throws Exception 
 		{
 		SearchServiceBusiness ssb = null;
@@ -98,7 +100,13 @@ public class SearchServiceImpl extends RemoteServiceServlet implements
 			if (keywords!= null && !keywords.trim().equals("")){
 				query = ItemMD.KEYWORDS+":"+keywords;
 			}
-			response = ssb.find(query, queryFacet, start, rows);
+			if (start != null){
+				this.start = start;
+			}
+			if (rows != null){
+				this.rows = rows;
+			}
+			response = ssb.find(query, queryFacet, this.start, this.rows);
 			solrQuery = ssb.getSolrQuery();
 			result = response.getStatus();
 		} catch (NumberFormatException e) {
@@ -113,20 +121,16 @@ public class SearchServiceImpl extends RemoteServiceServlet implements
 		return result;
 	}
 
-	public Integer getStart() {
-		return start;
-	}
-
-	public void setStart(Integer start) {
-		this.start = start;
-	}
-
+	@SuppressWarnings("unchecked")
 	@Override
-	public TreeMap<String, TreeMap<String, Long>> getFacets() {
-		TreeMap<String, TreeMap<String, Long>> result = null;
-		TreeMap<String, Long> field = null;
+	public TreeMap<String, Vector<String[]>> getFacets() {
+		TreeMap<String, Vector<String[]>> result = null;
+		Vector<String[]> field = null;
+		FacetField facetField = null;
+		String[] value = null;
+		Vector<String> vFacet = null;
 		
-		result = new TreeMap<String, TreeMap<String,Long>>();
+		result = new TreeMap<String, Vector<String[]>>();
 		if (response.getFacetQuery()!= null){
 			if (response.getFacetDates()!= null && !response.getFacetDates().isEmpty()){
 				System.out.println("FacetDates");
@@ -141,16 +145,33 @@ public class SearchServiceImpl extends RemoteServiceServlet implements
 				}
 			}
 			if (response.getFacetFields()!= null && !response.getFacetFields().isEmpty()){
-				for (int x=0; x<response.getFacetFields().size(); x++){
-					field = new TreeMap<String, Long>();
-					for (int y=0; y<response.getFacetFields().get(x).getValueCount(); y++){
-						if (response.getFacetFields().get(x).getValues().get(y).getCount()>0){
-							field.put(response.getFacetFields().get(x).getValues().get(y).getName(), 
-									response.getFacetFields().get(x).getValues().get(y).getCount());
+				try {
+					vFacet = (Vector<String>) Configuration.getValues("web.search.solr.facet");
+				} catch (ConfigurationException e) {
+					e.printStackTrace();
+				}
+
+				for (int x=0; x<vFacet.size(); x++){
+					facetField = response.getFacetField(vFacet.get(x));
+//				for (int x=0; x<response.getFacetFields().size(); x++){
+					field = new Vector<String[]>();
+//					System.out.println("response.getFacetFields: "+response.getFacetFields().get(x).getName());
+					for (int y=0; y<facetField.getValueCount(); y++){
+//					for (int y=0; y<response.getFacetFields().get(x).getValueCount(); y++){
+						if (facetField.getValues().get(y).getCount()>0){
+//						if (response.getFacetFields().get(x).getValues().get(y).getCount()>0){
+//							System.out.println("\t"+response.getFacetFields().get(x).getValues().get(y).getName()+" : "+response.getFacetFields().get(x).getValues().get(y).getCount());
+							value = new String[2];
+							value[0] = facetField.getValues().get(y).getName(); 
+							value[1] = ""+facetField.getValues().get(y).getCount(); 
+//							value[0] = response.getFacetFields().get(x).getValues().get(y).getName(); 
+//							value[1] = ""+response.getFacetFields().get(x).getValues().get(y).getCount(); 
+							field.add(value);
 						}
 					}
 					if (field.size()>0){
-						result.put(response.getFacetFields().get(x).getName(), field);
+						result.put(x+"\t"+facetField.getName(), field);
+//						result.put(response.getFacetFields().get(x).getName(), field);
 					}
 				}
 			}
@@ -233,28 +254,17 @@ public class SearchServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	public Integer getRows() {
-		return rows;
-	}
+	public TreeMap<String, String> getNavigator() {
+		TreeMap<String, String> result = null;
 
-	@Override
-	public void setRows(Integer rows) {
-		this.rows = rows;
+		result = new TreeMap<String, String>();
 		
-	}
-
-	@Override
-	public TreeMap<String, Object> getNavigator() {
-		TreeMap<String, Object> result = null;
-
-		result = new TreeMap<String, Object>();
-		
-		result.put("rows", new Long(rows));
-		result.put("qTime", new Long(response.getQTime()));
+		result.put("rows", ""+rows);
+		result.put("qTime", ""+response.getQTime());
 
 		if (response.getResults() != null){
-			result.put("start", new Long(response.getResults().getStart()));
-			result.put("numFound", new Long(response.getResults().getNumFound()));
+			result.put("start", ""+response.getResults().getStart());
+			result.put("numFound", ""+response.getResults().getNumFound());
 		}
 		return result;
 	}	

@@ -4,14 +4,8 @@
 package it.bncf.magazziniDigitali.search.tools;
 
 import it.bncf.magazziniDigitali.search.search.SearchPanel;
-import it.bncf.magazziniDigitali.search.search.SearchServiceAsync;
-//import it.bncf.magazziniDigitali.utils.Record;
-
-
-
 
 import java.util.TreeMap;
-import java.util.Vector;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.BlurEvent;
@@ -27,9 +21,7 @@ import com.google.gwt.user.client.ui.IntegerBox;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.smartgwt.client.widgets.Window;
-import com.smartgwt.client.widgets.grid.ListGrid;
-import com.smartgwt.client.widgets.grid.ListGridRecord;
+//import it.bncf.magazziniDigitali.utils.Record;
 
 /**
  * Classe utilizzata per la gestione della Navigazione del risultato di Ricerca
@@ -48,13 +40,13 @@ public class NavigatorPanel extends HorizontalPanel {
 	private PushButton pshbtnFine;
 	private Label lRecPag;
 	private IntegerBox ibRecPag;
-	private ListGrid gCenter;
+//	private ListGrid gCenter;
 //	private Vector<Record> records;
 //	private int page;
 //	private int totPage;
-	private Window window;
-//	private int recPage=0;
-	private SearchServiceAsync searchService = null;
+//	private Window window;
+	private int recPage=0;
+//	private SearchServiceAsync searchService = null;
 	private SearchPanel searchPanel = null;
 
 	/**
@@ -80,13 +72,13 @@ public class NavigatorPanel extends HorizontalPanel {
 	/**
 	 * Costruttore
 	 */
-	public NavigatorPanel(SearchServiceAsync searchService, SearchPanel searchPanel, TreeMap<String, Object> result) {
+	public NavigatorPanel(SearchPanel searchPanel, TreeMap<String, String> result) {
 //	public Navigator(ListGrid gCenter) {
 		this.setStylePrimaryName("pNavigator");
+//		this.searchService = searchService;
+		this.searchPanel = searchPanel;
 		init(result);
 //		disableNavigator();
-		this.searchService = searchService;
-		this.searchPanel = searchPanel;
 		show();
 //		this.gCenter=gCenter;
 	}
@@ -104,7 +96,7 @@ public class NavigatorPanel extends HorizontalPanel {
 	/**
 	 * Metodo utilizzato per inizializzare la visualizzazione dei bottoni per la navigazione
 	 */
-	private void init(TreeMap<String, Object> result){
+	private void init(TreeMap<String, String> result){
 		constants = GWT.create(NavigatorConstants.class);
 		messages = GWT.create(NavigatorMessages.class);
 		setHeight("26px");
@@ -115,26 +107,27 @@ public class NavigatorPanel extends HorizontalPanel {
 		qTime = 0;
 		if (result != null){
 			if (result.get("start") != null){
-				start = (Long)result.get("start");
+				start = new Long(result.get("start"));
 			}
 			if (result.get("rows") != null){
-				rows = (Long)result.get("rows");
+				rows = new Long(result.get("rows"));
 			}
 			if (result.get("numFound") != null){
-				numFound = (Long)result.get("numFound");
+				numFound = new Long(result.get("numFound"));
 			}
 			if (result.get("qTime") != null){
-				qTime = (Long)result.get("qTime");
+				qTime = new Long(result.get("qTime"));
 			}
 		}
 		
+		recPage = (int) rows;
 		add(getLStatus());
 		add(getPshbtnInizio());
 		add(getPshbtnIndietro());
 		add(getPshbtnAvanti());
 		add(getPshbtnFine());
 		add(getLRecPag());
-		add(getIbRecPag());
+		add(getpIbRecPag());
 	}
 
 	private SimplePanel getLStatus(){
@@ -165,23 +158,33 @@ public class NavigatorPanel extends HorizontalPanel {
 		return sp;
 	}
 
-	private SimplePanel getIbRecPag(){
+	private SimplePanel getpIbRecPag(){
 		SimplePanel sp = null;
+		sp = new SimplePanel();
+		sp.setWidth("40px");
+		sp.add(getIbRecPag());
+		return sp;
+	}
+
+	protected IntegerBox getIbRecPag(){
 		if (ibRecPag==null){
 			ibRecPag = new IntegerBox();
-			ibRecPag.setValue(10);
+			ibRecPag.setValue(recPage);
 			ibRecPag.setWidth("30px");
 			ibRecPag.setTitle(constants.recPag());
 			ibRecPag.addBlurHandler(new BlurHandler() {
 				
 				@Override
 				public void onBlur(BlurEvent event) {
-//					if (recPage != ibRecPag.getValue()){
-//						page=1;
-//						show();
-//						recPage = ibRecPag.getValue();
-//						
-//					}
+					if (recPage != ibRecPag.getValue()){
+						if (ibRecPag.getValue()>=constants.maxRecPage()){
+							ibRecPag.setValue(constants.maxRecPage());
+							com.google.gwt.user.client.Window.alert(messages.msgLimitPage(constants.maxRecPage()));
+
+						}
+						searchPanel.search(0, ibRecPag.getValue(), true);
+						recPage = ibRecPag.getValue();
+					}
 				}
 			});
 			ibRecPag.addKeyPressHandler(new KeyPressHandler() {
@@ -190,21 +193,22 @@ public class NavigatorPanel extends HorizontalPanel {
 				public void onKeyPress(KeyPressEvent event) {
 					if (event.getCharCode()==((char)13) ||
 							event.getCharCode()==((char)10)){
-//						if (recPage != ibRecPag.getValue()){
-//							page=1;
-//							show();
-//							recPage = ibRecPag.getValue();
-//						}
+						if (recPage != ibRecPag.getValue()){
+							if (ibRecPag.getValue()>=constants.maxRecPage()){
+								ibRecPag.setValue(constants.maxRecPage());
+								com.google.gwt.user.client.Window.alert(messages.msgLimitPage(constants.maxRecPage()));
+	
+							}
+							searchPanel.search(0, ibRecPag.getValue(), true);
+							recPage = ibRecPag.getValue();
+						}
 					}
 				}
 			});
 		}
-		sp = new SimplePanel();
-		sp.setWidth("40px");
-		sp.add(ibRecPag);
-		return sp;
+		return ibRecPag;
 	}
-
+	
 	private SimplePanel getPshbtnInizio() {
 		if (pshbtnInizio == null) {
 			pshbtnInizio = new PushButton(constants.bInizio());
@@ -215,7 +219,7 @@ public class NavigatorPanel extends HorizontalPanel {
 			image.setTitle(constants.bInizio());
 			pshbtnInizio.getUpFace().setImage(image);
 			pshbtnInizio.setStyleName("navigator");
-			pshbtnInizio.addClickHandler(new NavigatorClick(NavigatorClick.INIZIO));
+			pshbtnInizio.addClickHandler(new NavigatorClick(NavigatorClick.INIZIO,searchPanel, this));
 		}
 		return pButton(pshbtnInizio);
 	}
@@ -230,7 +234,7 @@ public class NavigatorPanel extends HorizontalPanel {
 			image.setTitle(constants.bIndietro());
 			pshbtnIndietro.getUpFace().setImage(image);
 			pshbtnIndietro.setStyleName("navigator");
-			pshbtnIndietro.addClickHandler(new NavigatorClick(NavigatorClick.INDIETRO));
+			pshbtnIndietro.addClickHandler(new NavigatorClick(NavigatorClick.INDIETRO,searchPanel, this));
 		}
 		return pButton(pshbtnIndietro);
 	}
@@ -245,7 +249,7 @@ public class NavigatorPanel extends HorizontalPanel {
 			image.setTitle(constants.bAvanti());
 			pshbtnAvanti.getUpFace().setImage(image);
 			pshbtnAvanti.setStyleName("navigator");
-			pshbtnAvanti.addClickHandler(new NavigatorClick(NavigatorClick.AVANTI));
+			pshbtnAvanti.addClickHandler(new NavigatorClick(NavigatorClick.AVANTI,searchPanel,this));
 		}
 		return pButton(pshbtnAvanti);
 	}
@@ -260,7 +264,7 @@ public class NavigatorPanel extends HorizontalPanel {
 			image.setTitle(constants.bFine());
 			pshbtnFine.getUpFace().setImage(image);
 			pshbtnFine.setStyleName("navigator");
-			pshbtnFine.addClickHandler(new NavigatorClick(NavigatorClick.FINE));
+			pshbtnFine.addClickHandler(new NavigatorClick(NavigatorClick.FINE,searchPanel,this));
 		}
 		return pButton(pshbtnFine);
 	}
@@ -282,7 +286,7 @@ public class NavigatorPanel extends HorizontalPanel {
 		NumberFormat nf = null;
 
 		disableNavigator();
-		if (rows>0){
+		if (numFound>0){
 			recStop = start+rows;
 			if (recStop>numFound){
 				recStop = numFound;
@@ -294,6 +298,9 @@ public class NavigatorPanel extends HorizontalPanel {
 					page = (start/rows)+1;
 				}
 				totPage =numFound/rows;
+				if ((totPage*rows)<numFound){
+					totPage++;
+				}
 			}
 			nf = NumberFormat.getFormat("#,###");
 			lStatus.setText(
@@ -311,7 +318,7 @@ public class NavigatorPanel extends HorizontalPanel {
 	}
 	
 	private void enableNavigator(long recStop){
-		if (rows>0){
+		if (start>0){
 			pshbtnInizio.setEnabled(true);
 			pshbtnIndietro.setEnabled(true);
 		}
@@ -329,23 +336,48 @@ public class NavigatorPanel extends HorizontalPanel {
 		public static final String FINE = "fine";
 
 		private String stato;
+		private SearchPanel searchPanel = null;
+		private NavigatorPanel nagivatorPanel = null;
 
-		public NavigatorClick(String stato){
+		public NavigatorClick(String stato, SearchPanel searchPanel, NavigatorPanel nagivatorPanel){
 			this.stato = stato;
+			this.searchPanel = searchPanel;
+			this.nagivatorPanel = nagivatorPanel;
 		}
 
 		@Override
 		public void onClick(ClickEvent event) {
-//			if (stato.equals(INIZIO)) {
+			Integer lStart =0;
+			Integer iRows = null;
+			System.out.println("Stato: "+stato);
+			iRows = nagivatorPanel.getIbRecPag().getValue();
+			if (stato.equals(INIZIO)) {
+				lStart = 0;
 //				page=1;
-//			} else if (stato.equals(INDIETRO)) {
+			} else if (stato.equals(INDIETRO)) {
+				lStart = (int) (start-iRows);
+				if (lStart <0){
+					lStart = 0;
+				}
 //				page--;
-//			} else if (stato.equals(AVANTI)) {
+			} else if (stato.equals(AVANTI)) {
+				lStart = (int) (start+iRows);
+				if (lStart >numFound){
+					lStart = (int) ((numFound/iRows)*iRows);
+				}
 //				page++;
-//			} else if (stato.equals(FINE)) {
+			} else if (stato.equals(FINE)) {
+				lStart = (int) ((numFound/iRows)*iRows);
+			}
 //				page=totPage;
 //			}
 //			show();
+			if (lStart>=constants.maxRecSearch()){
+				lStart = constants.maxRecSearch()-iRows;
+				com.google.gwt.user.client.Window.alert(messages.msgLimitResult(constants.maxRecSearch()));
+
+			}
+			searchPanel.search(lStart, iRows, true);
 		}
 		
 	}

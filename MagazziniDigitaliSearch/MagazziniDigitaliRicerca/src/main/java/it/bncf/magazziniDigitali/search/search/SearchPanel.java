@@ -10,9 +10,11 @@ import it.bncf.magazziniDigitali.search.tools.NavigatorPanel;
 import it.bncf.magazziniDigitali.search.tools.graphics.ButtonClear;
 import it.bncf.magazziniDigitali.search.tools.graphics.ButtonSearch;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.Vector;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.NumberFormat;
@@ -109,7 +111,7 @@ public class SearchPanel extends CaptionPanel {
 							(event.getCharacterValue()==13 ||
 							event.getCharacterValue()==10)){
 						event.cancel();
-						search();
+						search(0,null,false);
 					}
 				}
 			});
@@ -126,7 +128,7 @@ public class SearchPanel extends CaptionPanel {
 				
 				@Override
 				public void onClick(ClickEvent event) {
-					search();
+					search(0, null, false);
 				}
 			});
 		}
@@ -143,15 +145,17 @@ public class SearchPanel extends CaptionPanel {
 				@Override
 				public void onClick(ClickEvent event) {
 					getTKeywors().clearValue();
+					search(0, null, false);
 				}
 			});
 		}
 		return bClear;
 	}
 
-	protected void search(){
+	public void search(Integer start, Integer rows, Boolean facetFilter){
 		SearchServiceAsync searchService = null;
-		TreeMap<String, String> queryFacet = null;
+		TreeMap<String, String[]> queryFacet = null;
+		Vector<String> values =null;
 		
 		bSearch.setDisabled(true);
 		bClear.setDisabled(true);
@@ -159,28 +163,36 @@ public class SearchPanel extends CaptionPanel {
 		resultPanel.setVisible(false);
 
 		searchService = GWT.create(SearchService.class);
-		if (facetPanel.getVerticalPanel() != null &&
-				facetPanel.getVerticalPanel().getWidgetCount()>0){
-			for (int x=0; x<facetPanel.getVerticalPanel().getWidgetCount(); x++){
-				CaptionPanel cp = (CaptionPanel) facetPanel.getVerticalPanel().getWidget(x);
-				
-				Iterator<Widget> widgets = cp.iterator();
-			    while (widgets.hasNext()){
-			    	Tree tree = (Tree) widgets.next();
-			    	for (int y=0; y<tree.getItemCount(); y++){
-			    		TreeItem treeItem = tree.getItem(y);
-			    		CheckBox cb = (CheckBox) treeItem.getWidget();
-			    		if (cb.getValue().booleanValue()){
-			    			if (queryFacet==null){
-			    				queryFacet = new TreeMap<String, String>();
-			    			}
-			    			queryFacet.put(cb.getName(), cb.getTitle());
-			    		}
-			    	}
-			    }
+		if (facetFilter.booleanValue()){
+			if (facetPanel.getVerticalPanel() != null &&
+					facetPanel.getVerticalPanel().getWidgetCount()>0){
+				for (int x=0; x<facetPanel.getVerticalPanel().getWidgetCount(); x++){
+					CaptionPanel cp = (CaptionPanel) facetPanel.getVerticalPanel().getWidget(x);
+					
+					Iterator<Widget> widgets = cp.iterator();
+				    while (widgets.hasNext()){
+				    	Tree tree = (Tree) widgets.next();
+				    	for (int y=0; y<tree.getItemCount(); y++){
+				    		TreeItem treeItem = tree.getItem(y);
+				    		CheckBox cb = (CheckBox) treeItem.getWidget();
+				    		if (cb.getValue().booleanValue()){
+				    			if (queryFacet==null){
+				    				queryFacet = new TreeMap<String, String[]>();
+				    			}
+				    			if (queryFacet.get(cb.getName())!= null){
+				    				values = new Vector<String>(Arrays.asList(queryFacet.get(cb.getName())));
+				    			} else {
+				    				values = new Vector<String>();
+				    			}
+				    			values.add(cb.getTitle());
+				    			queryFacet.put(cb.getName(), values.toArray(new String[values.size()]));
+				    		}
+				    	}
+				    }
+				}
 			}
 		}
-		searchService.find(getTKeywors().getValueAsString(), queryFacet,
+		searchService.find(getTKeywors().getValueAsString(), queryFacet, start, rows,
 				new SearchResult(facetPanel, resultPanel, getBSearch(), getBClear(), searchService, queryFacet, this));
 	}
 }
@@ -192,11 +204,11 @@ class SearchResult implements AsyncCallback<Integer> {
 	private ButtonSearch bSearch = null;
 	private ButtonClear bClear = null;
 	private SearchServiceAsync searchService = null;
-	private TreeMap<String, String> queryFacet  = null;
+	private TreeMap<String, String[]> queryFacet  = null;
 	private SearchPanel searchPanel = null;
 
 	public SearchResult(FacetPanel facetPanel, ResultPanel resultPanel, 
-			ButtonSearch bSearch, ButtonClear bClear, SearchServiceAsync searchService, TreeMap<String, String> queryFacet,
+			ButtonSearch bSearch, ButtonClear bClear, SearchServiceAsync searchService, TreeMap<String, String[]> queryFacet,
 			SearchPanel searchPanel) {
 		this.facetPanel = facetPanel;
 		this.resultPanel = resultPanel;
@@ -245,21 +257,20 @@ class ResultsResult implements AsyncCallback<String> {
 	public void onSuccess(String result) {
 		resultPanel.clear();
 		resultPanel.add(new HTMLPanel(result));
-		searchService.getNavigator(new NavigatorResult(resultPanel, searchService, searchPanel));
+		searchService.getNavigator(new NavigatorResult(resultPanel, searchPanel));
 		resultPanel.setVisible(true);
 	}
 	
 }
 
-class NavigatorResult implements AsyncCallback<TreeMap<String, Object>> {
+class NavigatorResult implements AsyncCallback<TreeMap<String, String>> {
 
 	private ResultPanel resultPanel = null;
-	private SearchServiceAsync searchService = null;
+//	private SearchServiceAsync searchService = null;
 	private SearchPanel searchPanel = null;
 
-	public NavigatorResult(ResultPanel resultPanel, SearchServiceAsync searchService, SearchPanel searchPanel){
+	public NavigatorResult(ResultPanel resultPanel, SearchPanel searchPanel){
 		this.resultPanel = resultPanel;
-		this.searchService = searchService;
 		this.searchPanel = searchPanel;
 	}
 
@@ -269,22 +280,22 @@ class NavigatorResult implements AsyncCallback<TreeMap<String, Object>> {
 	}
 
 	@Override
-	public void onSuccess(TreeMap<String, Object> result) {
-		resultPanel.add(new NavigatorPanel(searchService, searchPanel, result));
+	public void onSuccess(TreeMap<String, String> result) {
+		resultPanel.add(new NavigatorPanel(searchPanel, result));
 	}
 	
 }
 
-class FacetsResult implements AsyncCallback<TreeMap<String, TreeMap<String, Long>>> {
+class FacetsResult implements AsyncCallback<TreeMap<String, Vector<String[]>>> {
 
 
 	private FacetConstants costanti = null;
 	
 	private FacetPanel facetPanel = null;
-	private TreeMap<String, String> queryFacet  = null;
+	private TreeMap<String, String[]> queryFacet  = null;
 	private SearchPanel searchPanel = null;
 
-	public FacetsResult(FacetPanel facetPanel, TreeMap<String, String> queryFacet, SearchPanel searchPanel){
+	public FacetsResult(FacetPanel facetPanel, TreeMap<String, String[]> queryFacet, SearchPanel searchPanel){
 		costanti = GWT.create(FacetConstants.class);
 		this.facetPanel = facetPanel;
 		this.queryFacet = queryFacet;
@@ -297,35 +308,57 @@ class FacetsResult implements AsyncCallback<TreeMap<String, TreeMap<String, Long
 	}
 
 	@Override
-	public void onSuccess(TreeMap<String, TreeMap<String, Long>> result) {
+	public void onSuccess(TreeMap<String, Vector<String[]>> result) {
 		CaptionPanel cpFacet = null;
 		NumberFormat mf = null;
 		Tree tree = null;
+		String key = null;
+		String[] values = null;
+		String value = null;
+		String[] st = null;
 
 		facetPanel.getVerticalPanel().clear();
 		if (result != null && result.size()>0){
-			for(Map.Entry<String, TreeMap<String, Long>> entry: result.entrySet()){
+			for(Map.Entry<String, Vector<String[]>> entry: result.entrySet()){
 				cpFacet = new CaptionPanel();
 				cpFacet.setStylePrimaryName("fcTree");
 				cpFacet.setCaptionText(getName(entry.getKey()));
 				tree = new Tree();
 				mf = NumberFormat.getFormat("#,###");
-				for(Map.Entry<String, Long> entry2: entry.getValue().entrySet()){
+				for ( int x=0; x<entry.getValue().size(); x++){
+					values = entry.getValue().get(x);
+//				for(Map.Entry<String, Long> entry2: entry.getValue().entrySet()){
 					CheckBox cb = new CheckBox();
-					cb.setName(entry.getKey());
-					cb.setTitle(entry2.getKey());
-					cb.setHTML(entry2.getKey()+" : <b>"+mf.format(entry2.getValue())+"</b>");
+					key = entry.getKey().split("\t")[1];
+					cb.setName(key);
+					
+					cb.setTitle((String) values[0]);
+//					cb.setTitle(entry2.getKey());
+					st = ((String) values[0]).split("\n");
+//					st = entry2.getKey().split("\n");
+					value = "";
+					for (int y=0;y <st.length; y++){
+						if (st[y].replace("_", " ").trim().length()>0){
+							value += (value.equals("")?"":" ")+st[y].replace("_", " ").trim();
+						}
+					}
+					cb.setHTML("<b>"+mf.format(new Long(values[1]))+"</b> : "+value);
+//					cb.setHTML("<b>"+mf.format(entry2.getValue())+"</b> : "+value);
 					cb.addClickHandler(new com.google.gwt.event.dom.client.ClickHandler() {
 						
 						@Override
 						public void onClick(com.google.gwt.event.dom.client.ClickEvent event) {
-							searchPanel.search();
+							searchPanel.search(0,null,true);
 						}
 					});
 					if (queryFacet != null){
-						if (queryFacet.get(entry.getKey())!= null){
-							if (queryFacet.get(entry.getKey()).equals(entry2.getKey())){
-								cb.setValue(Boolean.TRUE);
+						if (queryFacet.get(key)!= null){
+							for (int y=0; y<queryFacet.get(key).length; y++){
+								if (queryFacet.get(key)[y].equals((String) values[0])){
+//							if (queryFacet.get(entry.getKey()).equals(entry2.getKey())){
+									cb.setValue(Boolean.TRUE);
+									break;
+								}
 							}
 						}
 					}
@@ -341,15 +374,33 @@ class FacetsResult implements AsyncCallback<TreeMap<String, TreeMap<String, Long
 
 	private String getName(String key){
 		String value = null;
-		value = key;
-		if (key.equals(costanti.mimeType_fc())){
+		value = key.split("\t")[1];
+		if (value.equals(costanti.mimeType_fc())){
 			value = costanti.mimeType_title();
-		} else if (key.equals(costanti.promon_fc())){
+		} else if (value.equals(costanti.promon_fc())){
 			value = costanti.promon_title();
-		} else if (key.equals(costanti.relationshipType_fc())){
+		} else if (value.equals(costanti.relationshipType_fc())){
 			value = costanti.relationshipType_title();
-		} else if (key.equals(costanti.tipoOggetto_fc())){
+		} else if (value.equals(costanti.tipoOggetto_fc())){
 			value = costanti.tipoOggetto_title();
+		} else if (value.equals(costanti.tipoDocumento_fc())){
+			value = costanti.tipoDocumento_title();
+		} else if (value.equals(costanti.autore_fc())){
+			value = costanti.autore_title();
+		} else if (value.equals(costanti.titolo_fc())){
+			value = costanti.titolo_title();
+		} else if (value.equals(costanti.data_fc())){
+			value = costanti.data_title();
+		} else if (value.equals(costanti.tipoContenitore_fc())){
+			value = costanti.tipoContenitore_title();
+		} else if (value.equals(costanti.fileType_fc())){
+			value = costanti.fileType_title();
+		} else if (value.equals(costanti.eventType_fc())){
+			value = costanti.eventType_title();
+		} else if (value.equals(costanti.agentSoftware_fc())){
+			value = costanti.agentSoftware_title();
+		} else if (value.equals(costanti.agentDepositante_fc())){
+			value = costanti.agentDepositante_title();
 		}
 		return value;
 	}
