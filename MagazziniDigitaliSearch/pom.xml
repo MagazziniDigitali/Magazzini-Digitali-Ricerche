@@ -5,6 +5,7 @@
   <version>1.0.0</version>
   <packaging>pom</packaging>
   <modules>
+  	<module>MagazziniDigitaliRicerca</module>
   	<module>MagazziniDigitaliRicercaBusiness</module>
   </modules>
 </project>
