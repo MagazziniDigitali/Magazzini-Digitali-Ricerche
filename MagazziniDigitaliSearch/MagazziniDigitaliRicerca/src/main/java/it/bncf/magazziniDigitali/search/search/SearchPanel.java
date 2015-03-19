@@ -17,8 +17,12 @@ import java.util.TreeMap;
 import java.util.Vector;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.i18n.client.NumberFormat;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.CaptionPanel;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -255,10 +259,47 @@ class ResultsResult implements AsyncCallback<String> {
 
 	@Override
 	public void onSuccess(String result) {
+		HTMLPanel html = null;
+		NodeList<Element> anchors = null;
 		resultPanel.clear();
-		resultPanel.add(new HTMLPanel(result));
+		
+		html = new HTMLPanel(result);
+		anchors = html.getElement().getElementsByTagName("a");
+		for ( int i = 0 ; i < anchors.getLength() ; i++ ) {
+		    Element a = anchors.getItem(i);
+		    Anchor link = new Anchor(a.getInnerHTML(), true);
+		    link.addClickHandler(new ClickResult(a.getTitle(),a.getAttribute("href")));
+		    html.addAndReplaceElement(link, a);
+		}
+		
+		resultPanel.add(html);
 		searchService.getNavigator(new NavigatorResult(resultPanel, searchPanel));
 		resultPanel.setVisible(true);
+	}
+	
+}
+
+class ClickResult implements com.google.gwt.event.dom.client.ClickHandler {
+	private String title = null;
+	private String id = null;
+
+	public ClickResult(String title, String id){
+		this.title = title;
+		this.id = id;
+	}
+
+	@Override
+	public void onClick(com.google.gwt.event.dom.client.ClickEvent event) {
+		String href = null;
+
+		if (title.equalsIgnoreCase("breve")){
+			href= Window.Location.getHref();
+			href += (href.indexOf("?")>-1?"&":"?");
+			href += "id="+id;
+			Window.open(href, "_blank", "");
+		} else {
+			Window.alert("Metodo non implementato: "+title);
+		}
 	}
 	
 }

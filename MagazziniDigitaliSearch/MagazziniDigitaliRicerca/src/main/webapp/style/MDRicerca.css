@@ -77,3 +77,11 @@ table.mdResultRice td {
 table.pNavigator td {
     color: #000000;
 }
+
+table.mdResultRice td a {
+    color: #000000;
+}
+
+div.center a {
+    color: #000000;
+}
