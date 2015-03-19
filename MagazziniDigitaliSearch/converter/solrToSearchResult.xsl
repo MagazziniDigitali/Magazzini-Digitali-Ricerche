@@ -10,6 +10,9 @@
     </xsl:template>
     <xsl:template match="//response/result/doc">
         <tr>
+            <xsl:if test="position() mod 2 = 0">
+                <xsl:attribute name="class">pari</xsl:attribute>
+            </xsl:if>
             <td>
                 <a title="breve">
                     <xsl:for-each select="str[@name='id']">

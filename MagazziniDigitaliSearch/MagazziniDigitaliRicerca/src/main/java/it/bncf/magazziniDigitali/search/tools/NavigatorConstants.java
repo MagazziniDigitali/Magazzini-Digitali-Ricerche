@@ -10,7 +10,7 @@ public interface NavigatorConstants extends Constants {
 	String bFine();
 	String recPag();
 	
-	@DefaultIntValue(value=100000)
+	@DefaultIntValue(value=1000)
 	int maxRecSearch();
 
 	@DefaultIntValue(value=200)

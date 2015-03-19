@@ -99,6 +99,9 @@ public class index implements EntryPoint {
 			center.add(searchPanel);
 			center.add(facetPanel);
 			center.add(resultPanel);
+			searchPanel.setVisible(true);
+			searchPanel.getRicercaBase();
+			searchPanel.search(0, null, false);
 		} else {
 			services = GWT.create(IndexService.class);
 			try {
