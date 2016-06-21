@@ -58,4 +58,13 @@
     <appender-ref ref="STDOUT"/>
     <appender-ref ref="STDERR"/>
   </category>
+  
+  <category name="mx.randalf.converter.xsl.ConverterXsl">
+    <level value="ERROR"/>
+    <appender-ref ref="STDOUT"/>
+    <appender-ref ref="STDERR"/>
+  </category>
+
+  <root>
+  </root>
 </log4j:configuration>

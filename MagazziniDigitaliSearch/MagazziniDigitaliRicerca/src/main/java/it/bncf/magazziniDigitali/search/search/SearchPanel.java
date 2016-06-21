@@ -358,6 +358,10 @@ class FacetsResult implements AsyncCallback<TreeMap<String, Vector<String[]>>> {
 		String value = null;
 		String[] st = null;
 
+		
+		// TODO: MX http://solr-01.bncf.lan:8983/solr/mdProd/select?q=*%3A*&rows=1&wt=json&indent=true&facet=true&facet.query=indexed%3A%5BNOW-3MONTH%2FDAY+TO+NOW%2FDAY%2B1DAY%5D
+		
+		
 		facetPanel.getVerticalPanel().clear();
 		if (result != null && result.size()>0){
 			for(Map.Entry<String, Vector<String[]>> entry: result.entrySet()){

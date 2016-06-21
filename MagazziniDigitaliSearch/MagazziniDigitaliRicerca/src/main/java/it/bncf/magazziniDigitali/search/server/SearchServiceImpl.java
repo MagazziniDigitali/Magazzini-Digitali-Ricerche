@@ -17,6 +17,12 @@ import java.util.List;
 import java.util.TreeMap;
 import java.util.Vector;
 
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import mx.randalf.configuration.Configuration;
 import mx.randalf.configuration.exception.ConfigurationException;
 import mx.randalf.converter.xsl.ConverterXsl;
@@ -35,6 +41,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.google.gwt.user.server.rpc.SerializationPolicy;
 
 /**
  * @author massi
@@ -54,7 +61,7 @@ public class SearchServiceImpl extends RemoteServiceServlet implements
 
 	private int rows = 0;
 
-	private QueryResponse response = null;
+	private QueryResponse qResponse = null;
 
 	private SolrParams solrQuery = null;
 
@@ -74,8 +81,8 @@ public class SearchServiceImpl extends RemoteServiceServlet implements
 	}
 
 	private void readConf(){
-		
 		try {
+			System.out.println("\n\n\n\n\n\nREAD CONFIG\n\n\n\n\n\n");
 			rows = Integer.parseInt(Configuration.getValue("web.search.solr.rows"));
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
@@ -95,6 +102,14 @@ public class SearchServiceImpl extends RemoteServiceServlet implements
 		Integer result = -1;
 		
 		try {
+			if (this.getThreadLocalRequest() != null){
+				System.out.println("X-FORWARDED-FOR: "+getThreadLocalRequest().getHeader("X-FORWARDED-FOR")+
+						"\t RemoteAddr: "+getThreadLocalRequest().getRemoteAddr()+
+						"\t RemoteHost: "+getThreadLocalRequest().getRemoteHost());
+			} else {
+				System.out.println("getThreadLocalRequest() == null");
+			}
+
 			ssb = new SearchServiceBusiness();
 			
 			if (keywords!= null && !keywords.trim().equals("")){
@@ -106,9 +121,9 @@ public class SearchServiceImpl extends RemoteServiceServlet implements
 			if (rows != null){
 				this.rows = rows;
 			}
-			response = ssb.find(query, queryFacet, this.start, this.rows);
+			qResponse = ssb.find(query, queryFacet, this.start, this.rows);
 			solrQuery = ssb.getSolrQuery();
-			result = response.getStatus();
+			result = qResponse.getStatus();
 		} catch (NumberFormatException e) {
 			throw new Exception(e.getMessage(), e);
 		} catch (ConfigurationException e) {
@@ -131,20 +146,20 @@ public class SearchServiceImpl extends RemoteServiceServlet implements
 		Vector<String> vFacet = null;
 		
 		result = new TreeMap<String, Vector<String[]>>();
-		if (response.getFacetQuery()!= null){
-			if (response.getFacetDates()!= null && !response.getFacetDates().isEmpty()){
+		if (qResponse.getFacetQuery()!= null){
+			if (qResponse.getFacetDates()!= null && !qResponse.getFacetDates().isEmpty()){
 				System.out.println("FacetDates");
-				for (int x=0; x<response.getFacetDates().size(); x++){
-					System.out.println("\tName:"+response.getFacetDates().get(x).getName());
-					for (int y=0; y<response.getFacetDates().get(x).getValueCount(); y++){
-						System.out.print("\t\tAsFilterQuery:"+response.getFacetDates().get(x).getValues().get(y).getAsFilterQuery());
-						System.out.print("\tCount:"+response.getFacetDates().get(x).getValues().get(y).getCount());
-						System.out.print("\tName:"+response.getFacetDates().get(x).getValues().get(y).getName());
-						System.out.println("\tFacetField:"+response.getFacetDates().get(x).getValues().get(y).getFacetField());
+				for (int x=0; x<qResponse.getFacetDates().size(); x++){
+					System.out.println("\tName:"+qResponse.getFacetDates().get(x).getName());
+					for (int y=0; y<qResponse.getFacetDates().get(x).getValueCount(); y++){
+						System.out.print("\t\tAsFilterQuery:"+qResponse.getFacetDates().get(x).getValues().get(y).getAsFilterQuery());
+						System.out.print("\tCount:"+qResponse.getFacetDates().get(x).getValues().get(y).getCount());
+						System.out.print("\tName:"+qResponse.getFacetDates().get(x).getValues().get(y).getName());
+						System.out.println("\tFacetField:"+qResponse.getFacetDates().get(x).getValues().get(y).getFacetField());
 					}
 				}
 			}
-			if (response.getFacetFields()!= null && !response.getFacetFields().isEmpty()){
+			if (qResponse.getFacetFields()!= null && !qResponse.getFacetFields().isEmpty()){
 				try {
 					vFacet = (Vector<String>) Configuration.getValues("web.search.solr.facet");
 				} catch (ConfigurationException e) {
@@ -152,7 +167,7 @@ public class SearchServiceImpl extends RemoteServiceServlet implements
 				}
 
 				for (int x=0; x<vFacet.size(); x++){
-					facetField = response.getFacetField(vFacet.get(x));
+					facetField = qResponse.getFacetField(vFacet.get(x));
 //				for (int x=0; x<response.getFacetFields().size(); x++){
 					field = new Vector<String[]>();
 //					System.out.println("response.getFacetFields: "+response.getFacetFields().get(x).getName());
@@ -175,13 +190,13 @@ public class SearchServiceImpl extends RemoteServiceServlet implements
 					}
 				}
 			}
-			if (response.getFacetPivot()!= null && response.getFacetPivot().size()>0){
+			if (qResponse.getFacetPivot()!= null && qResponse.getFacetPivot().size()>0){
 				System.out.println("FacetPivot");
-				for (int x=0; x<response.getFacetPivot().size(); x++){
-					String name = response.getFacetPivot().getName(x);
+				for (int x=0; x<qResponse.getFacetPivot().size(); x++){
+					String name = qResponse.getFacetPivot().getName(x);
 					System.out.println("\tName:"+name);
-					System.out.println("\tBooleanArg:"+response.getFacetPivot().getBooleanArg(name).booleanValue());
-					List<PivotField> list =response.getFacetPivot().get(name);
+					System.out.println("\tBooleanArg:"+qResponse.getFacetPivot().getBooleanArg(name).booleanValue());
+					List<PivotField> list =qResponse.getFacetPivot().get(name);
 					for (int y=0; y<list.size(); y++){
 						System.out.print("\t\tCount:"+list.get(y).getCount());
 						System.out.print("\tField:"+list.get(y).getField());
@@ -191,17 +206,17 @@ public class SearchServiceImpl extends RemoteServiceServlet implements
 					}
 				}
 			}
-			if (response.getFacetRanges()!= null && !response.getFacetRanges().isEmpty()){
+			if (qResponse.getFacetRanges()!= null && !qResponse.getFacetRanges().isEmpty()){
 				System.out.println("FacetRanges");
-				for (int x=0; x<response.getFacetRanges().size(); x++){
-					System.out.println("\tName:"+response.getFacetRanges().get(x).getName());
-					System.out.print("\t\tAfter:"+response.getFacetRanges().get(x).getAfter());
-					System.out.print("\tBefore:"+response.getFacetRanges().get(x).getBefore());
-					System.out.print("\tBetween:"+response.getFacetRanges().get(x).getBetween());
-					System.out.print("\tCounts:"+response.getFacetRanges().get(x).getCounts());
-					System.out.print("\tGap:"+response.getFacetRanges().get(x).getGap());
-					System.out.print("\tEnd:"+response.getFacetRanges().get(x).getEnd());
-					System.out.print("\tStart:"+response.getFacetRanges().get(x).getStart());
+				for (int x=0; x<qResponse.getFacetRanges().size(); x++){
+					System.out.println("\tName:"+qResponse.getFacetRanges().get(x).getName());
+					System.out.print("\t\tAfter:"+qResponse.getFacetRanges().get(x).getAfter());
+					System.out.print("\tBefore:"+qResponse.getFacetRanges().get(x).getBefore());
+					System.out.print("\tBetween:"+qResponse.getFacetRanges().get(x).getBetween());
+					System.out.print("\tCounts:"+qResponse.getFacetRanges().get(x).getCounts());
+					System.out.print("\tGap:"+qResponse.getFacetRanges().get(x).getGap());
+					System.out.print("\tEnd:"+qResponse.getFacetRanges().get(x).getEnd());
+					System.out.print("\tStart:"+qResponse.getFacetRanges().get(x).getStart());
 				}
 			}
 		}
@@ -214,12 +229,12 @@ public class SearchServiceImpl extends RemoteServiceServlet implements
 		String result = null;
 
 		try {
-			if (response.getResults() != null){
+			if (qResponse.getResults() != null){
 				
 				baos = new ByteArrayOutputStream();
 				
 				ConverterXsl.convertXsl(Configuration.getValue("web.search.result.xslt"), 
-						toXML(solrQuery, response), baos);
+						toXML(solrQuery, qResponse), baos);
 				
 				baos.flush();
 				
@@ -260,12 +275,62 @@ public class SearchServiceImpl extends RemoteServiceServlet implements
 		result = new TreeMap<String, String>();
 		
 		result.put("rows", ""+rows);
-		result.put("qTime", ""+response.getQTime());
+		result.put("qTime", ""+qResponse.getQTime());
 
-		if (response.getResults() != null){
-			result.put("start", ""+response.getResults().getStart());
-			result.put("numFound", ""+response.getResults().getNumFound());
+		if (qResponse.getResults() != null){
+			result.put("start", ""+qResponse.getResults().getStart());
+			result.put("numFound", ""+qResponse.getResults().getNumFound());
 		}
 		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.google.gwt.user.server.rpc.RemoteServiceServlet#doGetSerializationPolicy(javax.servlet.http.HttpServletRequest, java.lang.String, java.lang.String)
+	 */
+	@Override
+	protected SerializationPolicy doGetSerializationPolicy(
+			HttpServletRequest request, String moduleBaseURL, String strongName) {
+		System.out.println("getRemoteAddr: "+request.getRemoteAddr());
+		return super.doGetSerializationPolicy(request, moduleBaseURL, strongName);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.google.gwt.user.server.rpc.RemoteServiceServlet#shouldCompressResponse(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, java.lang.String)
+	 */
+	@Override
+	protected boolean shouldCompressResponse(HttpServletRequest request,
+			HttpServletResponse response, String responsePayload) {
+		System.out.println("getRemoteAddr2: "+request.getRemoteAddr());
+		return super.shouldCompressResponse(request, response, responsePayload);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.google.gwt.user.server.rpc.AbstractRemoteServiceServlet#readContent(javax.servlet.http.HttpServletRequest)
+	 */
+	@Override
+	protected String readContent(HttpServletRequest request)
+			throws ServletException, IOException {
+		System.out.println("getRemoteAddr2: "+request.getRemoteAddr());
+		return super.readContent(request);
+	}
+
+	/* (non-Javadoc)
+	 * @see javax.servlet.http.HttpServlet#service(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+	 */
+	@Override
+	protected void service(HttpServletRequest arg0, HttpServletResponse arg1)
+			throws ServletException, IOException {
+		System.out.println("getRemoteAddr2: "+arg0.getRemoteAddr());
+		super.service(arg0, arg1);
+	}
+
+	/* (non-Javadoc)
+	 * @see javax.servlet.http.HttpServlet#service(javax.servlet.ServletRequest, javax.servlet.ServletResponse)
+	 */
+	@Override
+	public void service(ServletRequest arg0, ServletResponse arg1)
+			throws ServletException, IOException {
+		System.out.println("getRemoteAddr2: "+arg0.getRemoteAddr());
+		super.service(arg0, arg1);
 	}	
 }
