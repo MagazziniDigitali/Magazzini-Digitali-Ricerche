@@ -7,7 +7,7 @@
   </parent>
   <groupId>it.bncf.magazziniDigitali.search.business</groupId>
   <artifactId>MagazziniDigitaliRicercaBusiness</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.4</version>
   <description>Progetto utilizzato per l'implementazione di tutta la loginca di Business relativa al modulo di ricerca</description>
     
   <properties>
@@ -19,7 +19,7 @@
   	<dependency>
   		<groupId>it.bncf.magazziniDigitali.solr</groupId>
   		<artifactId>MagazziniDigitaliSolr</artifactId>
-  		<version>1.0.5</version>
+  		<version>1.0.14</version>
   	</dependency>
   </dependencies>
   	<repositories>

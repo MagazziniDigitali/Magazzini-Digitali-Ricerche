@@ -3,6 +3,7 @@
  */
 package it.bncf.magazziniDigitali.search.business.search;
 
+import java.io.IOException;
 import java.util.TreeMap;
 import java.util.Vector;
 
@@ -79,7 +80,12 @@ public class SearchServiceBusiness {
 			throw e;
 		} finally {
 			if (find != null){
-				find.close();
+				try {
+					find.close();
+				} catch (IOException e) {
+					log.error(e.getMessage(), e);
+					throw new SolrServerException(e.getMessage(),e);
+				}
 			}
 		}
 		
