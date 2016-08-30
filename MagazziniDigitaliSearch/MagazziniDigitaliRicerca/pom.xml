@@ -11,7 +11,7 @@
     </parent>
   <artifactId>MagazziniDigitaliRicerca</artifactId>
   <packaging>war</packaging>
-  <version>1.0.4</version>
+  <version>1.0.6</version>
   <name>MDRicerca</name>
   
   <properties>
@@ -142,7 +142,7 @@
     <dependency>
     	<groupId>it.bncf.magazziniDigitali.search.business</groupId>
     	<artifactId>MagazziniDigitaliRicercaBusiness</artifactId>
-    	<version>1.0.1</version>
+    	<version>1.0.4</version>
     </dependency>
     <dependency>
     	<groupId>it.bncf.magazziniDigitali.utils</groupId>
