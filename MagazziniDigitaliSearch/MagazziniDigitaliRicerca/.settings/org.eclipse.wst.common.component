@@ -5,6 +5,12 @@
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/resources"/>
+        <dependent-module archiveName="MagazziniDigitaliRicercaBusiness-1.0.4.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/MagazziniDigitaliRicercaBusiness/MagazziniDigitaliRicercaBusiness">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="MagazziniDigitaliSolr-1.0.14.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/MagazziniDigitaliSolr/MagazziniDigitaliSolr">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <property name="java-output-path" value="/TecaGestionale/target/TecaGestionale/WEB-INF/classes"/>
         <property name="context-root" value="MagazziniDigitaliRicerca"/>
     </wb-module>
